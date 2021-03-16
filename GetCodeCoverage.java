@@ -90,7 +90,7 @@ public class GetCodeCoverage {
 
 					final String coverageString = df.format(coverage);
 
-					if(coverage < minimumCoverage) {
+					if (coverage < minimumCoverage) {
 						System.out.println(
 							"Coverage Failure: Code coverage is below minimal requirement of " + 
 							minimumCoverage + 
@@ -121,11 +121,12 @@ public class GetCodeCoverage {
 		final List<Integer> resultingTotalLines = Lists.newArrayList();
 		final List<Integer> resultingCoveredLines = Lists.newArrayList();
 
-		for(CodeCoverageResult currentResult : codeCoverageResults) {
+		for (CodeCoverageResult currentResult : codeCoverageResults) {
 			final Integer totalLines = currentResult.getNumLocations();
 			final Integer covered = totalLines - currentResult.getNumLocationsNotCovered();
-			resultingCoveredLines.add(covered);
+			
 			resultingTotalLines.add(totalLines);
+			resultingCoveredLines.add(covered);
 		}
 
 		final Integer totalLineCount = resultingTotalLines.stream().mapToInt(Integer::intValue).sum();
