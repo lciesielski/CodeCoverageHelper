@@ -1,0 +1,47 @@
+<project name="Example" basedir="." xmlns:sf="antlib:com.salesforce">
+
+	<property name="coverage.endpoint" value="https://test.salesforce.com/services/Soap/u/50.0"/>
+  	<property name="coverage.minimum" value="75.0"/>
+  	<property name="coverage.debug" value="false"/>
+
+	<taskdef uri="antlib:com.salesforce" resource="com/salesforce/antlib.xml" classpath="${basedir}/migration/ant-salesforce.jar"/>
+	
+	<target name="deploy">
+		<sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" rollbackOnError="true" ignoreWarnings="true"/>
+	</target>
+
+	<target name="validate">
+		<record name="deploymentLog.txt" action="start"/>
+
+		<sf:deploy username="${sf.username}" password="${sf.password}" serverurl="${sf.serverurl}" deployRoot="src" checkOnly="true" testLevel="RunLocalTests" ignoreWarnings="true"/>
+
+		<record name="deploymentLog.txt" action="stop"/>
+
+		<loadfile srcFile="deploymentLog.txt" property="coverage.validation"> 
+			<filterchain> 
+				<tailfilter lines="1"/>
+				<tokenfilter>
+					<stringtokenizer suppressdelims="true"/>
+					<containsregex pattern="[a-zA-Z0-9]{18}"/>
+				</tokenfilter>
+			</filterchain> 
+		</loadfile> 
+
+		<java jar="${basedir}/coverage/get-code-coverage.jar" fork="true" failonerror="false" resultproperty="exitCode"> 
+			<arg value="${sf.username}"/>
+			<arg value="${sf.password}"/>
+			<arg value="${coverage.endpoint}"/>
+			<arg value="${coverage.minimum}"/>
+			<arg value="${coverage.validation}"/>
+			<arg value="${coverage.debug}"/>
+		</java>
+
+		<fail message="Build Failed" status="${exitCode}">
+			<condition>
+				<not>
+					<equals arg1="${exitCode}" arg2="0"/>
+				</not>
+			</condition>
+		</fail>
+	</target>
+</project>
