@@ -2,10 +2,10 @@
 
 ## About The Project
 
-Simple applicataion that can be used in conjunction with CI.
+Simple application that can be used in conjunction with CI.
 Application should get the ID of last deployment with ANT tool (see `validate` target in `build.xml`).
 Then with ID it should retrieve specific info from Salesforce metadata API and calculate code coverage.
-Purpose of the application is to have "early warning system" if code drops below eg. 80%, or to simply enforce higher (than standrad 75%) code coverage value. 
+Purpose of the application is to have "early warning system" if code drops below eg. 80%, or to simply enforce higher (than standard 75%) code coverage value. 
 
 ## Getting Started
 
